@@ -17,7 +17,7 @@ function mostrarProducto($conn,$resultado){
 		echo "<p>";
 		echo "<br />";
 		echo "Nombre: <span>",$fila[1],"</span><br />";
-		echo "Descripcion: <a href=\"index.php?id=$fila[0]\">",$fila[2],"</a>";
+		echo "Descripcion: <a href=\"#\">",$fila[2],"</a>";
 		echo "</p>";
 		echo "<p class=\"price\">Precio: <strong>Q",$fila[3],"</strong></p>";
 		echo "</li>";
