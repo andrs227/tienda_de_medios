@@ -93,7 +93,7 @@
 			<!-- Container -->
 			<div id="container">
 				<div class="tabbed">
-					<!-- Tab Registro -->
+					<!-- Tab Loggin -->
 					<div class="tab-content" style="display:block;">
 						<div>
 <?php
@@ -135,7 +135,7 @@ if($_GET){
 ?>
 						</div>
 					</div>
-					<!-- Tab Registro -->
+					<!-- Tab Loggin -->
 				</div>
 				
 				<!-- Footer -->

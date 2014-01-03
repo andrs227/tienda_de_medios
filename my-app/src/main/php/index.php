@@ -41,14 +41,9 @@
 		<div id="slider">
 			<div id="slider-holder">
 				<ul>
-				<!--
-				    <li><a href="#"><img src="css/images/slide1.jpg" alt="" /></a></li>
-				    <li><a href="#"><img src="css/images/slide2.jpg" alt="" /></a></li>
-				    <li><a href="#"><img src="css/images/slide1.jpg" alt="" /></a></li>
-				    <li><a href="#"><img src="css/images/slide2.jpg" alt="" /></a></li>
-				    <li><a href="#"><img src="css/images/slide1.jpg" alt="" /></a></li>
-				    <li><a href="#"><img src="css/images/slide2.jpg" alt="" /></a></li>
-				-->
+				    <li><a href="#"><img src="css/images/ecualizador.png" alt="" /></a></li>
+				    <li><a href="#"><img src="css/images/peliculas.png" alt="" /></a></li>
+					<li><a href="#"><img src="css/images/multimedia_banner.jpg" alt="" /></a></li>
 				</ul>
 			</div>
 			<div id="slider-nav">
@@ -93,11 +88,14 @@
 			
 			<!-- Tabs -->
 			<div class="tabs"><ul>
-				    <li><a href="#" class="active"><span>Catalogo</span></a></li>
+				    <li><a href="#" class="active"><span>Contenidos</span></a></li>
 					<?php
 						if($_SESSION){
 							if($_SESSION['tipo']==1)
 								echo "<li><a href=\"#\" class=\"active\"><span>Nuevo Anuncio</span></a></li>";
+						}else{
+							echo "<li><a href=\"#\" class=\"active\"><span>Registro</span></a></li>";
+							echo "<li><a href=\"#\" class=\"active\"><span>Login</span></a></li>";
 						}
 					?>
 			</ul></div>
@@ -142,7 +140,144 @@
 					}
 					?>
 					<!-- Agregar Contenido -->
-				
+					
+					<!-- Tab Registro -->
+					<div class="tab-content" style="display:block;">
+						<div>
+<?php
+if($_GET){
+	$usuario=$_GET['usuario'];
+	$nombre=$_GET['nombre'];
+	$apellido=$_GET['apellido'];
+	$direccion=$_GET['direccion'];
+	$correo=$_GET['correo'];
+	$error=$_GET['error'];
+	echo "<form action=\"registro.php\" method=\"POST\">
+		<div style=\"float:left;width:50%;\">
+			<p>Usuario</p><p><input type=\"text\" name=\"usuario\" value=\"$usuario\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Nombre(s)</p><p><input type=\"text\" name=\"nombre\" value=\"$nombre\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Apellido(s)</p><p><input type=\"text\" name=\"apellido\" value=\"$apellido\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Direccion</p><p><input type=\"text\" name=\"direccion\" value=\"$direccion\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>$error</p>
+		</div>
+		<div style=\"float:left;width:50%;\">
+			<p>Contrase&ntildea </p><p><input type=\"password\" name=\"clave1\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Repetir Contrase&ntildea </p><p><input type=\"password\" name=\"clave2\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Correo</p><p><input type=\"email\" name=\"correo\" value=\"$correo\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<br /><p><input type=\"submit\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p>
+		</div>
+	</form>";
+}else if($_POST){
+	$usuario=$_POST['usuario'];
+	$nombre=$_POST['nombre'];
+	$apellido=$_POST['apellido'];
+	$direccion=$_POST['direccion'];
+	$clave1=$_POST['clave1'];
+	$clave2=$_POST['clave2'];
+	$correo=$_POST['correo'];
+	$conn = mysql_connect("localhost","root" ,"");
+	mysql_select_db("catalogo", $conn);
+	$valido=true;
+	$error="";
+	$query = "SELECT username FROM usuario WHERE username like '$usuario';";
+	$resultado = mysql_query($query, $conn);
+	if($fila = mysql_fetch_row($resultado)){
+		$valido=false;
+		$error=$error."Nombre de usuario ya existe<br>";
+	}
+	mysql_free_result($resultado);
+	if($nombre==""){
+		$valido=false;
+		$error=$error."Ingrese Nombre<br>";
+	}
+	if($apellido==""){
+		$valido=false;
+		$error=$error."Ingrese Apellido<br>";
+	}
+	if($direccion==""){
+		$valido=false;
+		$error=$error."Ingrese direccion<br>";
+	}
+	if($clave1!=$clave2){
+		$valido=false;
+		$error=$error."La clave no coincide<br>";
+	}
+	if($correo==""){
+		$valido=false;
+		$error=$error."Correo no valido<br>";
+	}
+	if($valido){
+		$query = "INSERT INTO usuario VALUES (NULL,'$usuario','$clave1','$nombre','$apellido','$direccion','$correo',0);";
+		mysql_query($query, $conn);
+		header("Location: index.php");
+	}else{
+		$url="Location: registro.php?usuario=$usuario&nombre=$nombre&apellido=$apellido&direccion=$direccion&correo=$correo&error=$error";
+		header($url);
+	}
+}else{
+	echo "<form action=\"registro.php\" method=\"POST\">
+		<div style=\"float:left;width:50%;\">
+			<p>Usuario</p><p><input type=\"text\" name=\"usuario\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Nombre(s)</p><p><input type=\"text\" name=\"nombre\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Apellido(s)</p><p><input type=\"text\" name=\"apellido\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Direccion</p><p><input type=\"text\" name=\"direccion\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+		</div>
+		<div style=\"float:left;width:50%;\">
+			<p>Contrase&ntildea </p><p><input type=\"password\" name=\"clave1\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Repetir Contrase&ntildea </p><p><input type=\"password\" name=\"clave2\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Correo</p><p><input type=\"email\" name=\"correo\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<br /><p><input type=\"submit\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p>
+		</div>
+	</form>";
+}
+?>
+						</div>
+					</div>
+					<!-- Tab Registro -->
+
+					<!-- Tab Loggin -->
+					<div class="tab-content" style="display:block;">
+						<div>
+<?php
+if($_GET){
+	$usuario=$_GET['usuario'];
+	$error=$_GET['error'];
+	echo "<form action=\"login.php\" method=\"POST\"><div style=\"float:left;width:35%;\"><p> <br /> </p></div><div style=\"float:left;width:30%;\">
+			<p>Usuario</p><p><input type=\"text\" name=\"usuario\" value=\"$usuario\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Contrase&ntildea </p><p><input type=\"password\" name=\"clave\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<br />$error
+			<br /><p><input type=\"submit\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p>
+		</div><div style=\"float:left;width:35%;\"><p> <br /> </p></div></form>";
+}else if($_POST){
+	$usuario=$_POST['usuario'];
+	$clave=$_POST['clave'];
+	$conn = mysql_connect("localhost","root" ,"");
+	mysql_select_db("catalogo", $conn);
+	$error="";
+	$query = "SELECT id_usuario, username, Administrador FROM usuario WHERE username like '$usuario' AND password like '$clave';";
+	$resultado = mysql_query($query, $conn);
+	if($fila = mysql_fetch_row($resultado)){
+		$_SESSION['id_usuario']=$fila[0];
+		$_SESSION['usuario']=$fila[1];
+		$_SESSION['tipo']=$fila[2];
+		header("Location: index.php");
+	}else{
+		$error=$error."El nombre de usuario y/o la contraseña estan incorrectos<br>";
+		$url="Location: login.php?usuario=$usuario";
+		header($url);
+	}
+	mysql_free_result($resultado);
+}else{
+	echo "<form action=\"login.php\" method=\"POST\"><div style=\"float:left;width:35%;\"><p> <br /> </p></div><div style=\"float:left;width:30%;\">
+			<p>Usuario</p><p><input type=\"text\" name=\"usuario\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<p>Contrase&ntildea </p><p><input type=\"password\" name=\"clave\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p><br />
+			<br /><p><input type=\"submit\" style=\"width:90%;height:25px;background:WhiteSmoke;border:0;color:BLACK\" /></p>
+		</div><div style=\"float:left;width:35%;\"><p> <br /> </p></div></form>";
+}
+?>
+						</div>
+					</div>
+					<!-- Tab Loggin -->
 				</div>
 				
 				<!-- Footer -->
